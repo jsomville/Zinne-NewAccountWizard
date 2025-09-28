@@ -1,0 +1,23 @@
+{
+    "cities": [
+        {"value": "Anderlecht", "name": "Anderlecht", "postalCode": "1070"},
+        {"value": "Auderghem", "name": "Auderghem", "postalCode": "1160"},
+        {"value": "Berchem-Sainte-Agathe", "name": "Berchem-Sainte-Agathe", "postalCode": "1082"},
+        {"value": "Bruxelles Ville", "name": "Bruxelles", "postalCode": "1000"},
+        {"value": "Etterbeek", "name": "Etterbeek", "postalCode": "1040"},
+        {"value": "Evere", "name": "Evere", "postalCode": "1140"},
+        {"value": "Forest", "name": "Forest", "postalCode": "1190"},
+        {"value": "Ganshoren", "name": "Ganshoren", "postalCode": "1083"},
+        {"value": "Ixelles", "name": "Ixelles", "postalCode": "1050"},
+        {"value": "Jette", "name": "Jette", "postalCode": "1090"},
+        {"value": "Koekelberg", "name": "Koekelberg", "postalCode": "1081"},
+        {"value": "Molenbeek-Saint-Jean", "name": "Molenbeek-Saint-Jean", "postalCode": "1080"},
+        {"value": "Saint-Gilles", "name": "Saint-Gilles", "postalCode": "1060"},
+        {"value": "Saint-Josse-ten-Noode", "name": "Saint-Josse-ten-Noode", "postalCode": "1210"},
+        {"value": "Schaerbeek", "name": "Schaerbeek", "postalCode": "1030"},
+        {"value": "Uccle", "name": "Uccle", "postalCode": "1180"},
+        {"value": "Watermael-Boitsfort", "name": "Watermael-Boitsfort", "postalCode": "1170"},
+        {"value": "Woluwe-Saint-Lambert", "name": "Woluwe-Saint-Lambert", "postalCode": "1200"},
+        {"value": "Woluwe-Saint-Pierre", "name": "Woluwe-Saint-Pierre", "postalCode": "1150"}
+    ]
+}

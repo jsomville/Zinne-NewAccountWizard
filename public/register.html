@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+</head>
+<body>
+    <!-- Add banner at the top -->
+    <div class="banner">
+        <div class="banner-content">
+            <img src="/images/logo.png" alt="Company Logo" class="logo">
+            <h1 class="banner-title">New Account Registration</h1>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Personnal Information</h2>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="firstname">First Name:</label>
+                <input type="text" id="firstname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="lastname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dateofbirth">Date of Birth:</label>
+                <input type="date" id="dateofbirth" required>
+            </div>
+
+            <!-- Replace the single address form group with these fields -->
+            <div class="form-group">
+                <label for="street">Street:</label>
+                <input type="text" id="street" required>
+            </div>
+
+            <div class="form-group">
+                <label for="number">Number:</label>
+                <input type="text" id="number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="city">City:</label>
+                <select id="city" required>
+                    <option value="">Select a city</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="postalCode">Postal Code:</label>
+                <input type="text" id="postalCode" pattern="[0-9]{4}" required readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Signature:</label>
+                <canvas id="signature-pad" class="signature-pad" width="300" height="150"></canvas>
+                <button type="button" id="clear">Clear Signature</button>
+            </div>
+            
+            <button type="submit">Register</button>
+        </form>
+
+        <!-- Add verification section -->
+        <div id="verificationSection" class="verification-container">
+            <h3>Email Verification</h3>
+            <p>Please enter the 6-digit code sent to your email:</p>
+            <input type="text" id="verificationCode" class="code-input" 
+                   maxlength="6" pattern="\d{6}" required>
+            <button id="verifyButton">Verify Code</button>
+        </div>
+    </div>
+
+    <script>
+        // Load cities when page loads
+        async function loadCities() {
+            try {
+                const response = await fetch('/data/cities.json');
+                const data = await response.json();
+                const citySelect = document.getElementById('city');
+                
+                // Clear existing options
+                citySelect.innerHTML = '<option value="">Select a city</option>';
+                
+                data.cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.value;
+                    option.textContent = city.name;
+                    option.dataset.postalCode = city.postalCode;
+                    citySelect.appendChild(option);
+                });
+
+                // Add change event listener to city select
+                citySelect.addEventListener('change', (e) => {
+                    const selectedOption = e.target.options[e.target.selectedIndex];
+                    const postalCodeInput = document.getElementById('postalCode');
+                    
+                    if (selectedOption.value === '') {
+                        postalCodeInput.value = '';
+                        citySelect.setCustomValidity('Please select a city');
+                    } else {
+                        postalCodeInput.value = selectedOption.dataset.postalCode || '';
+                        citySelect.setCustomValidity('');
+                    }
+                });
+
+                // Initial validation state
+                citySelect.setCustomValidity('Please select a city');
+            } catch (error) {
+                console.error('Error loading cities:', error);
+                alert('Error loading cities list');
+            }
+        }
+
+        // Call loadCities when page loads
+        document.addEventListener('DOMContentLoaded', loadCities);
+
+        const canvas = document.getElementById('signature-pad');
+        const signaturePad = new SignaturePad(canvas);
+        const form = document.getElementById('registrationForm');
+
+        document.getElementById('clear').addEventListener('click', () => {
+            signaturePad.clear();
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (signaturePad.isEmpty()) {
+                alert('Please provide a signature');
+                return;
+            }
+
+            // Replace the formData object in the submit event listener
+            const formData = {
+                firstname: document.getElementById('firstname').value,
+                lastname: document.getElementById('lastname').value,
+                dateofbirth: document.getElementById('dateofbirth').value,
+                street: document.getElementById('street').value,
+                number: document.getElementById('number').value,
+                postalCode: document.getElementById('postalCode').value,
+                city: document.getElementById('city').value,
+                email: document.getElementById('email').value,
+                signature: signaturePad.toDataURL()
+            };
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    // Hide registration form and show verification section
+                    document.getElementById('registrationForm').style.display = 'none';
+                    document.getElementById('verificationSection').style.display = 'block';
+                    alert('Please check your email for the verification code.');
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Registration failed');
+            }
+        });
+
+        // Add verification code handling
+        document.getElementById('verifyButton').addEventListener('click', async () => {
+            const code = document.getElementById('verificationCode').value;
+            if (code.length !== 6 || !/^\d+$/.test(code)) {
+                alert('Please enter a valid 6-digit code');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Verification successful!');
+                    window.location.href = '/welcome.html'; // Redirect to welcome page
+                } else {
+                    alert('Invalid verification code. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Verification failed');
+            }
+        });
+    </script>
+</body>
+</html>
