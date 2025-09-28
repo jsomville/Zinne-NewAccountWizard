@@ -8,33 +8,26 @@ const home_page = () => {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Home</title>
-            <style>
-                .nav-list {
-                    list-style: none;
-                    padding: 0;
-                }
-                .nav-list li {
-                    margin: 10px 0;
-                }
-                .nav-list a {
-                    text-decoration: none;
-                    color: #007bff;
-                }
-                .nav-list a:hover {
-                    text-decoration: underline;
-                }
-            </style>
+            <title>Zinne Wizard Test - Home</title>
+            <link rel="stylesheet" href="/css/styles.css">
         </head>
         <body>
-            <h1>Home Page</h1>
-
-            <ul class="nav-list">
-                <li><a href="/wizard">Wizard</a></li>
-                <li><a href="/register.html">Register</a></li>
-                <li><a href="/api">API</a></li>
-                <li><a href="/payment">Payment</a></li>
-            </ul>
+            <div class="banner">
+                <div class="banner-content">
+                    <a href="/">
+                        <img src="/images/logo.png" alt="Company Logo" class="logo">
+                    </a>
+                    <h1 class="banner-title">Home Page</h1>
+                </div>
+            </div>
+            <div class="form-container">
+                <ul class="nav-list">
+                    <li><a href="/wizard">Wizard</a></li>
+                    <li><a href="/register.html">Register</a></li>
+                    <li><a href="/api">API</a></li>
+                    <li><a href="/payment">Payment</a></li>
+                </ul>
+            </div>
         </body>
     </html>`;
 }
