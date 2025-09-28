@@ -1,0 +1,34 @@
+{
+    "bankApps": [
+        {
+            "name": "KBC Mobile",
+            "scheme": "kbcmobile",
+            "package": "com.kbc.android.phone.kbc",
+            "appStoreUrl": "https://apps.apple.com/be/app/kbc-mobile/id458066754"
+        },
+        {
+            "name": "Belfius Mobile",
+            "scheme": "belfius",
+            "package": "be.belfius.directmobile.android",
+            "appStoreUrl": "https://apps.apple.com/be/app/belfius-mobile/id516216578"
+        },
+        {
+            "name": "ING Banking",
+            "scheme": "ingb",
+            "package": "com.ing.banking",
+            "appStoreUrl": "https://apps.apple.com/be/app/ing-smart-banking/id437203741"
+        },
+        {
+            "name": "Keytrade Bank",
+            "scheme": "keytradebank",
+            "package": "be.keytradebank.phone",
+            "appStoreUrl": "https://apps.apple.com/be/app/keytrade-bank/id431201642"
+        },
+        {
+            "name": "Hello Bank",
+            "scheme": "bnppf",
+            "package": "com.bnpp.hellobank",
+            "appStoreUrl": "https://apps.apple.com/be/app/hello-bank-by-bnp-paribas/id642897716"
+        }
+    ]
+}

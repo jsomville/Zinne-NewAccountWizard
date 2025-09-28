@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/pay.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="banner">
+        <div class="banner-content">
+            <img src="/images/logo.png" alt="Company Logo" class="logo">
+            <h1 class="banner-title">Payment</h1>
+        </div>
+    </div>
+
+    <div class="payment-container">
+        <h2>Payment Details</h2>
+        <div class="payment-info">
+            <time datetime="<%= date.iso %>" class="payment-time"><%= date.formatted %></time>
+            <p>Amount: <%= payment.currency %><%= payment.amount %></p>
+            <p>Reference: <%= payment.reference %></p>
+            <p>Beneficiary: <%= payment.beneficiary %></p>
+            <p>IBAN: <%= payment.iban %></p>
+            <p>Description: <%= payment.description %></p>
+        </div>
+        
+        <div class="qr-container">
+            <div id="qrcode"></div>
+            <p class="qr-instructions">Scan this QR code with your banking app</p>
+        </div>
+    </div>
+
+    <script>
+        const bankApps = <%- JSON.stringify(bankApps) %>;
+        const epcData = `<%- epcData %>`;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate QR Code
+            new QRCode(document.getElementById("qrcode"), {
+                text: epcData,
+                width: 256,
+                height: 256,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // Check if running on mobile device
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                const container = document.createElement('div');
+                container.className = 'bank-buttons';
+
+                bankApps.forEach(app => {
+                    const button = document.createElement('a');
+                    button.className = 'payment-button';
+                    button.textContent = `Pay with ${app.name}`;
+                    
+                    // Create payment URI
+                    const paymentUri = `${app.scheme}?data=${encodeURIComponent(epcData)}`;
+                    
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        const isAndroid = /Android/i.test(navigator.userAgent);
+                        const isiOS = /(iPhone|iPod|iPad)/i.test(navigator.userAgent);
+                        
+                        const openApp = () => {
+                            if (isAndroid) {
+                                // Try to open app using Intent URL format
+                                const intentUrl = `intent://${app.scheme.replace('://', '')}?data=${encodeURIComponent(epcData)}#Intent;scheme=${app.scheme.replace('://', '')};package=${app.package};end;`;
+                                window.location.href = intentUrl;
+                            } else {
+                                // iOS and other platforms
+                                const iframe = document.createElement('iframe');
+                                iframe.style.display = 'none';
+                                iframe.src = paymentUri;
+                                document.body.appendChild(iframe);
+                                
+                                setTimeout(() => {
+                                    document.body.removeChild(iframe);
+                                }, 2000);
+                            }
+                        };
+
+                        const openStore = () => {
+                            if (isiOS) {
+                                window.location.href = app.appStoreUrl;
+                            } else {
+                                window.location.href = `market://details?id=${app.package}`;
+                            }
+                        };
+
+                        // Try to open the app first
+                        const appOpenedAt = Date.now();
+                        openApp();
+
+                        // Fallback to store after timeout
+                        setTimeout(() => {
+                            if (!document.hidden) {
+                                openStore();
+                            }
+                        }, 1500);
+                    });
+
+                    container.appendChild(button);
+                });
+
+                // Insert buttons after QR code
+                document.querySelector('.qr-container').appendChild(container);
+            }
+        });
+    </script>
+</body>
+</html>

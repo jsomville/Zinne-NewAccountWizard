@@ -3,6 +3,7 @@ import cors from 'cors'
 
 import home_route from './routes/home_route.js';
 import api_route from './routes/api_route.js';
+import payment_route from './routes/payment_route.js';
 
 // Create Express object
 const app = express();
@@ -22,10 +23,13 @@ app.set('trust proxy', true);
 app.use(express.json()); //Json parsing
 app.use(express.urlencoded({ extended: false })); //url encoder
 
+//Set view engine
+app.set('view engine', 'ejs');
+
 //Add routes
-//app.use('/', home_route);
 app.use(express.static('public'));
 app.use('/api', api_route);
+app.use('/payment', payment_route);
 
 
 export { app };
