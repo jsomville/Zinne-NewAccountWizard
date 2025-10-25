@@ -8,3 +8,9 @@ Create a .env config file with the following:
 
  - EMAIL_USER : The email address for sending email
  - EMAIL_PWD : The password for the email service
+
+## To Getting Started
+
+Make sure to install dependencies : npm install
+
+To run : npm run dev

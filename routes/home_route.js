@@ -22,8 +22,8 @@ const home_page = () => {
             </div>
             <div class="form-container">
                 <ul class="nav-list">
-                    <li><a href="/wizard">Wizard</a></li>
-                    <li><a href="/register.html">Register</a></li>
+                    <li><a href="/register">Register</a></li>
+                    <li><a href="/register.html">Register Static Page</a></li>
                     <li><a href="/api">API</a></li>
                     <li><a href="/payment">Payment</a></li>
                 </ul>

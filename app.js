@@ -33,5 +33,6 @@ app.use('/', home_route);
 app.use('/api', api_route);
 app.use('/payment', payment_route);
 app.use('/wizard', wizard_route);
+app.use('/register', wizard_route);
 
 export { app };
